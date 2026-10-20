@@ -1,0 +1,37 @@
+services:
+  # Python FastAPI Backend Web Service
+  - type: web
+    name: studymate-ai-backend
+    runtime: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    plan: free
+    autoDeploy: true
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: GEMMA_PROVIDER
+        value: huggingface
+      - key: GEMMA_MODEL_ID
+        value: google/gemma-4-it
+      - key: GEMMA_API_KEY
+        sync: false
+      - key: MAX_UPLOAD_SIZE_MB
+        value: 15
+      - key: CONFIDENCE_THRESHOLD
+        value: 0.28
+
+  # React Vite Frontend Static Site
+  - type: web
+    name: studymate-ai-frontend
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    plan: free
+    autoDeploy: true
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
