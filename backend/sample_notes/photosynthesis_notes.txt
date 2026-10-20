@@ -1,0 +1,42 @@
+# Plant Physiology: Photosynthesis and Cellular Respiration Notes
+Course: Bio-201 Advanced Plant Biology
+Instructor: Dr. Sarah Vance
+
+## Section 1: Chloroplast Structure and Thylakoid Membrane
+The chloroplast is the primary organelle responsible for oxygenic photosynthesis in eukaryotic autotrophs.
+Enclosed by a double membrane consisting of outer and inner lipid bilayers, the interior contains a protein-rich fluid called stroma.
+Suspended within the stroma is an intricate network of interconnected flattened disc sacs termed thylakoids.
+Thylakoids are stacked into discrete columns called grana (singular: granum).
+The thylakoid membrane segregates the stroma from an internal aqueous compartment termed the thylakoid lumen.
+Embedded within the thylakoid membrane are light-harvesting pigment complexes, predominantly Chlorophyll a, Chlorophyll b, and accessory carotenoids.
+Chlorophyll a exhibits peak absorption in the blue-violet (430 nm) and red (662 nm) wavelengths of the visible spectrum.
+
+## Section 2: The Light-Dependent Reactions
+The light-dependent reactions occur specifically within the thylakoid membrane and convert radiant solar energy into chemical energy in the form of ATP and NADPH.
+The sequence initiates when photon energy excites P680 reaction center molecules inside Photosystem II (PSII).
+Excitation of P680 leads to photo-oxidation, releasing high-energy electrons that are transferred to the primary electron acceptor pheophytin.
+To replenish electrons lost by P680, the Oxygen-Evolving Complex (OEC) catalyzes the photolysis of water molecules via the reaction:
+2 H2O -> 4 H+ + 4 e- + O2.
+Molecular oxygen (O2) is released as a photosynthetic byproduct into the atmosphere.
+Electrons transit through plastoquinone (PQ), the cytochrome b6f complex, and plastocyanin (PC) before reaching Photosystem I (PSI).
+Light excitation at PSI drives electron transfer through ferredoxin and Ferredoxin-NADP+ Reductase (FNR) to reduce NADP+ into NADPH in the stroma.
+
+## Section 3: ATP Synthase and Photophosphorylation
+As electrons cascade through the cytochrome b6f complex, protons (H+) are actively translocated from the stroma into the thylakoid lumen.
+Along with protons generated from water photolysis in the lumen, this creates a steep transmembrane proton electrochemical gradient (proton motive force, ΔpH).
+Protons flow down their thermodynamic gradient from the lumen back to the stroma through the rotary channel of ATP Synthase (CF0-CF1 complex).
+This catalytic phosphorylation converts Adenosine Diphosphate (ADP) and inorganic phosphate (Pi) into Adenosine Triphosphate (ATP).
+This synthesis driven by light-generated proton gradients is termed photophosphorylation.
+
+## Section 4: The Calvin Cycle (Light-Independent Reactions)
+The Calvin-Benson cycle takes place in the chloroplast stroma and synthesizes triose phosphate carbohydrates from atmospheric carbon dioxide (CO2).
+The cycle comprises three enzymatic stages:
+Stage 1: Carbon Fixation. The enzyme Ribulose-1,5-bisphosphate carboxylase/oxygenase (RuBisCO) catalyzes the carboxylation of ribulose-1,5-bisphosphate (RuBP), yielding unstable six-carbon intermediates that spontaneously cleave into two molecules of 3-phosphoglycerate (3-PGA).
+Stage 2: Reduction. ATP and NADPH produced during light reactions phosphorylate and reduce 3-PGA into glyceraldehyde-3-phosphate (G3P).
+Stage 3: RuBP Regeneration. For every six turns of the cycle, two G3P molecules exit to form glucose and complex polysaccharides, while remaining G3P molecules regenerate RuBP through ATP-dependent phosphorylation.
+
+## Section 5: Cellular Respiration Comparison
+While photosynthesis is an endergonic anabolic pathway storing energy in carbon bonds, cellular respiration is an exergonic catabolic pathway.
+Cellular respiration oxidizes hexose sugars to produce CO2, H2O, and 30 to 32 ATP molecules per glucose.
+Glycolysis occurs in the cytosol, the Krebs cycle in the mitochondrial matrix, and oxidative phosphorylation along the inner mitochondrial cristae.
+Whereas water is split and oxygen is released in photosynthesis, molecular oxygen serves as the terminal electron acceptor reduced to water in mitochondrial respiration.

@@ -1,0 +1,35 @@
+# Computer Science 305: Computer Networks & Internet Protocols
+Instructor: Prof. David Clark
+
+## Section 1: The Internet Protocol Suite and Layered Architecture
+Computer networks rely on modular layered architectures to ensure interoperability and scalability.
+The standard 5-layer Internet model consists of:
+1. Application Layer (HTTP, DNS, SMTP, SSH)
+2. Transport Layer (TCP, UDP)
+3. Network Layer (IPv4, IPv6, ICMP, routing algorithms like OSPF and BGP)
+4. Data Link Layer (Ethernet, Wi-Fi 802.11)
+5. Physical Layer (Twisted-pair copper cables, fiber optics, radio spectrum)
+Each lower layer provides defined services to the layer above it via well-specified service interfaces and encapsulation headers.
+
+## Section 2: Transmission Control Protocol (TCP) and Connection Management
+TCP is a connection-oriented, reliable transport protocol that guarantees ordered, error-checked delivery of byte streams.
+Before payload data transfer begins, TCP establishes a logical end-to-end connection via the Three-Way Handshake:
+Step 1: The client sends a SYN (Synchronize) segment with an initial sequence number (ISN).
+Step 2: The server responds with a SYN-ACK segment acknowledging the client's ISN and offering its own server ISN.
+Step 3: The client returns an ACK segment acknowledging the server's sequence number. The connection enters the ESTABLISHED state.
+TCP implements congestion control through AIMD (Additive Increase, Multiplicative Decrease), slow start, and congestion avoidance algorithms.
+
+## Section 3: Domain Name System (DNS)
+The Domain Name System is a hierarchical, distributed naming system that maps human-friendly hostnames (e.g., example.edu) to 32-bit IPv4 or 128-bit IPv6 numerical addresses.
+DNS resolution traverses through:
+1. Recursive Resolver (typically ISP or local network cache)
+2. Root Name Servers (13 logical root server IP addresses worldwide)
+3. Top-Level Domain (TLD) Servers (.edu, .com, .org)
+4. Authoritative Name Servers holding actual resource records (A, AAAA, CNAME, MX).
+DNS queries primarily execute over UDP port 53 for rapid low-overhead resolution, reverting to TCP port 53 when payload size exceeds 512 bytes or during zone transfers.
+
+## Section 4: Packet Switching vs. Circuit Switching
+In packet switching, user messages are fragmented into independent packets consisting of header metadata and payload data.
+Packets traverse heterogeneous network paths dynamically, sharing communication links using statistical multiplexing.
+In contrast, circuit switching pre-allocates dedicated end-to-end communication channels with fixed bandwidth for the entire call duration (e.g., legacy PSTN telephone networks).
+Packet switching delivers significantly higher bandwidth efficiency and fault tolerance, although packets may experience variable queuing delays and jitter.
