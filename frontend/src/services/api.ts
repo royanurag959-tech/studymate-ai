@@ -12,7 +12,7 @@ import {
   AIStatus
 } from '../types';
 
-const API_BASE = '/api';
+const API_BASE = (import.meta.env.VITE_API_URL as string | undefined)?.replace(/\/$/, '') || '/api';
 
 export const api = {
   // Document endpoints

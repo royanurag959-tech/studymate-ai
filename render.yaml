@@ -18,9 +18,9 @@ services:
       - key: GEMMA_API_KEY
         sync: false
       - key: MAX_UPLOAD_SIZE_MB
-        value: 15
+        value: "15"
       - key: CONFIDENCE_THRESHOLD
-        value: 0.28
+        value: "0.28"
 
   # React Vite Frontend Static Site
   - type: web
@@ -29,9 +29,11 @@ services:
     rootDir: frontend
     buildCommand: npm install && npm run build
     staticPublishPath: dist
-    plan: free
     autoDeploy: true
     routes:
+      - type: rewrite
+        source: /api/*
+        destination: https://studymate-ai-backend.onrender.com/api/*
       - type: rewrite
         source: /*
         destination: /index.html
