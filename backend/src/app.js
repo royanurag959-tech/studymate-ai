@@ -44,6 +44,14 @@ app.use(`${config.API_PREFIX}/sessions`, sessionsRouter);
 app.use(`${config.API_PREFIX}/progress`, progressRouter);
 app.use(`${config.API_PREFIX}/ai`, aiRouter);
 
+// Also mount directly at root for proxy compatibility
+app.use('/', documentsRouter);
+app.use('/', qaRouter);
+app.use('/quiz', quizRouter);
+app.use('/sessions', sessionsRouter);
+app.use('/progress', progressRouter);
+app.use('/ai', aiRouter);
+
 // Global Error Handler
 app.use((err, req, res, next) => {
   console.error('Unhandled Server Error:', err);
