@@ -42,10 +42,10 @@
 
 ## 3. Technology Stack
 
-- **Frontend:** React 19, TypeScript, Vite, Tailwind CSS v4, Lucide React, Recharts, Canvas-Confetti
-- **Backend:** Python 3.13, FastAPI, Uvicorn, Pydantic v2, PyPDF, HTTPX, ReportLab
+- **Frontend:** React 19, JavaScript (JSX), Vite, Tailwind CSS v4, Lucide React, Recharts, Canvas-Confetti
+- **Backend:** Node.js v18+, Express, Multer, pdf-parse, Dotenv, UUID
 - **AI / LLM:** Google Gemma 4 via pluggable inference adapters (Hugging Face Inference API, Groq Cloud LPUs, OpenRouter, Ollama local instance) with a built-in Grounded Demo Mode simulator.
-- **Testing:** Pytest (14 backend tests) and Vitest + Testing Library (3 frontend tests).
+- **Testing:** Node.js native test runner + Supertest (backend test suite) and Vitest + Testing Library (frontend test suite).
 
 ---
 
@@ -54,16 +54,16 @@
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                      STUDYMATE AI FRONTEND                      │
-│             (React + TypeScript + Vite + Tailwind CSS)          │
+│             (React + JavaScript + Vite + Tailwind CSS)          │
 └───────────────┬─────────────────────────────────▲───────────────┘
-                │ HTTP Requests / JSON             │ Typed Responses
+                │ HTTP Requests / JSON             │ JSON Responses
                 ▼                                 │
 ┌─────────────────────────────────────────────────┴───────────────┐
-│                    FASTAPI BACKEND SERVICE                      │
+│                 NODE.JS & EXPRESS BACKEND SERVICE               │
 │                                                                 │
 │  ┌───────────────────────┐         ┌─────────────────────────┐  │
 │  │  Document Processor   │         │    Session & Progress   │  │
-│  │ (PyPDF / TXT Chunking)│         │      State Store        │  │
+│  │(pdf-parse/TXT Chunking│         │      State Store        │  │
 │  └───────────┬───────────┘         └────────────▲────────────┘  │
 │              │ Chunks                           │ Stats         │
 │              ▼                                  │               │
@@ -109,22 +109,14 @@ StudyMate AI uses Gemma 4 as its central intelligence engine under strict system
 
 ### Prerequisites
 - Node.js (v18+) and npm
-- Python (v3.10+) with pip
 
-### 1. Clone & Set Up Backend
+### 1. Set Up Backend (Node.js & Express)
 
 ```bash
 cd backend
 
-# (Optional) Create virtual environment
-python -m venv venv
-# On Windows:
-.\venv\Scripts\activate
-# On Linux/macOS:
-source venv/bin/activate
-
 # Install dependencies
-pip install -r requirements.txt
+npm install
 
 # Configure environment variables
 cp .env.example .env
@@ -144,18 +136,20 @@ GEMMA_API_KEY=your_gemma_api_key_here
 MAX_UPLOAD_SIZE_MB=15
 CONFIDENCE_THRESHOLD=0.28
 PORT=8001
-HOST=127.0.0.1
+HOST=0.0.0.0
 ```
 
 ### 3. Run Backend Server
 
 ```bash
 # In backend directory
-python -m uvicorn app.main:app --host 127.0.0.1 --port 8001 --reload
+npm start
+# Or for development auto-reload:
+npm run dev
 ```
-The FastAPI backend will start at `http://127.0.0.1:8001`. Interactive OpenAPI documentation is available at `http://127.0.0.1:8001/docs`.
+The Node.js Express backend will start at `http://localhost:8001`. Health check endpoint: `http://localhost:8001/api/health`.
 
-### 4. Set Up & Run Frontend
+### 4. Set Up & Run Frontend (React JavaScript)
 
 ```bash
 cd ../frontend
@@ -172,27 +166,30 @@ Open `http://localhost:5173` in your browser.
 
 ## 7. Automated Testing Suite
 
-The project includes 17 automated tests covering all 10 hackathon verification criteria:
+The project includes comprehensive automated test suites covering all hackathon verification criteria:
 
-### Running Backend Tests (Pytest)
+### Running Backend Tests (Node.js Test Runner)
 ```bash
 cd backend
-python -m pytest tests -v
+npm test
 ```
-**Results:** 14 passed out of 14:
-- `test_document_processing.py`: Valid extraction, chunking, empty notes validation, unsupported extension validation, blank paste validation (Tests 1, 6).
-- `test_qa_grounded.py`: Grounded answers with evidence, insufficient evidence refusal, Hinglish and difficulty levels (Tests 2, 3).
-- `test_quiz.py`: Grounded question generation, incorrect answer supportive evaluation with hints, correct answer mastery (Tests 4, 5).
-- `test_gemma_service.py`: Provider timeout and 503 resilience, API key masking (Tests 7, 10).
-- `test_sessions_progress.py`: Session CRUD lifecycle, persistence, and progress calculation (Test 8).
+Tests verify:
+- Document processing, chunking, and upload validation
+- Grounded Q&A with direct evidence from notes
+- Honest refusal of questions absent from notes (`"I couldn't find sufficient evidence in your supplied notes to answer this question confidently."`)
+- Grounded practice quiz generation and supportive evaluation with hints
+- Protection against secret API key leakage in public endpoints
+- Session lifecycle and learning progress persistence
 
 ### Running Frontend Tests (Vitest)
 ```bash
 cd frontend
 npm run test
 ```
-**Results:** 3 passed out of 3:
-- `app.test.tsx`: Landing hero verification, keyboard accessible navigation, and full dashboard integration (Test 9).
+Tests verify:
+- Landing hero headline, subheading, and primary CTA
+- Accessible sidebar navigation and view routing
+- Main application dashboard and session loading
 
 ---
 
@@ -251,17 +248,9 @@ To demonstrate the application live:
 
 ## 10. Deployment Guidelines
 
-### Frontend Deployment (Vercel)
-1. Push the `frontend` folder to your GitHub repository.
-2. In Vercel, set root directory to `frontend`, framework preset to `Vite`.
-3. Set environment variable `VITE_API_URL` to your production backend URL.
-4. Deploy.
-
-### Backend Deployment (Render / Railway / Cloud Run)
-1. Set root directory to `backend`.
-2. Build command: `pip install -r requirements.txt`.
-3. Start command: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`.
-4. Configure environment variables (`GEMMA_API_KEY`, `GEMMA_PROVIDER`, `GEMMA_MODEL_ID`).
+### 1-Click Render Blueprint Deployment
+A configured `render.yaml` blueprint is included in the root directory. To deploy both the Node.js Express backend and the React JavaScript frontend:
+👉 **[Deploy on Render](https://render.com/deploy?repo=https://github.com/royanurag959-tech/studymate-ai)**
 
 ---
 
