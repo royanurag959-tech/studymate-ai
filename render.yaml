@@ -30,10 +30,13 @@ services:
     buildCommand: npm install && npm run build
     staticPublishPath: dist
     autoDeploy: true
+    envVars:
+      - key: VITE_API_URL
+        value: https://studymate-ai-backend-6sna.onrender.com
     routes:
       - type: rewrite
         source: /api/*
-        destination: https://studymate-ai-backend.onrender.com/api/*
+        destination: https://studymate-ai-backend-6sna.onrender.com/api/*
       - type: rewrite
         source: /*
         destination: /index.html
