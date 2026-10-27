@@ -295,6 +295,7 @@ export function App() {
             <AITutorView
               topic={currentTopic}
               sessionId={currentSessionId}
+              documentCount={documents.length}
               onAsk={handleAskQuestion}
               onInspectEvidence={handleInspectEvidenceDirect}
               onNavigateToNotes={() => setCurrentTab('notes')}

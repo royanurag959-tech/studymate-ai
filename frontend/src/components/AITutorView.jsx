@@ -18,6 +18,7 @@ import {
 export const AITutorView = ({
   topic,
   sessionId,
+  documentCount = 0,
   onAsk,
   onInspectEvidence,
   onNavigateToNotes,
@@ -188,6 +189,34 @@ export const AITutorView = ({
           </div>
         </div>
       </div>
+
+      {/* Active Notes Status Banner */}
+      {documentCount === 0 ? (
+        <div className="bg-amber-50 border-b border-amber-200 px-4 py-2.5 flex items-center justify-between text-xs text-amber-900">
+          <div className="flex items-center gap-2 font-medium">
+            <AlertCircle className="h-4 w-4 text-amber-600 shrink-0" />
+            <span>Abhi is session mein koi notes loaded nahi hain. Sawaal puchne se pehle 'My Notes' mein notes save karein!</span>
+          </div>
+          <button
+            onClick={onNavigateToNotes}
+            className="rounded bg-amber-600 px-2.5 py-1 text-white font-bold hover:bg-amber-700 shrink-0 ml-2"
+          >
+            Go to My Notes
+          </button>
+        </div>
+      ) : (
+        <div className="bg-teal-50/70 border-b border-teal-200/80 px-4 py-2 flex items-center justify-between text-xs text-teal-900">
+          <span className="font-medium">
+            🟢 Active Study Notes: <strong>{topic}</strong> ({documentCount} document{documentCount > 1 ? 's' : ''} loaded)
+          </span>
+          <button
+            onClick={onNavigateToNotes}
+            className="text-teal-700 underline hover:text-teal-900 font-semibold ml-2"
+          >
+            Manage Notes
+          </button>
+        </div>
+      )}
 
       {/* Messages Scroll Area */}
       <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-5">
