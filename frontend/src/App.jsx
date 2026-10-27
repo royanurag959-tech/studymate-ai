@@ -84,21 +84,39 @@ export function App() {
   };
 
   const currentSession = sessions.find((s) => s.id === currentSessionId);
-  const currentTopic = currentSession?.topic || 'Plant Physiology & Cellular Respiration';
+  const currentTopic = currentSession?.topic || 'General Study Material';
 
   // Handlers
   const handleUploadDocument = async (file) => {
-    await api.uploadDocument(file, currentSessionId, currentTopic);
-    await loadSessionData(currentSessionId);
+    const derivedTopic = file.name.replace(/\.[^/.]+$/, '').replace(/[_-]/g, ' ');
+    const activeTopic =
+      !documents.length || currentTopic === 'General Study Material' || currentTopic.includes('Plant Physiology')
+        ? derivedTopic
+        : currentTopic;
+    await api.uploadDocument(file, currentSessionId, activeTopic);
     await loadSessions();
+    await loadSessionData(currentSessionId);
     showToast(`Uploaded and chunked: ${file.name}`);
   };
 
   const handlePasteNotes = async (title, content) => {
-    await api.pasteNotes(title, content, currentTopic, currentSessionId);
-    await loadSessionData(currentSessionId);
+    const activeTopic = (title && title.trim()) ? title.trim() : currentTopic;
+    await api.pasteNotes(title, content, activeTopic, currentSessionId);
     await loadSessions();
+    await loadSessionData(currentSessionId);
     showToast(`Saved notes: "${title}"`);
+  };
+
+  const handleClearAllNotes = async () => {
+    if (!window.confirm('Clear all notes in this session to upload fresh ones?')) return;
+    try {
+      await api.resetSession(currentSessionId);
+      await loadSessions();
+      await loadSessionData(currentSessionId);
+      showToast('Session cleared. You can now upload fresh notes on any subject.');
+    } catch (err) {
+      alert(`Failed to clear session: ${err.message}`);
+    }
   };
 
   const handleDeleteDocument = async (docId) => {
@@ -269,6 +287,7 @@ export function App() {
               onDeleteDocument={handleDeleteDocument}
               onLoadSample={handleLoadSampleNotes}
               onUpdateTopic={handleUpdateTopic}
+              onClearAllNotes={handleClearAllNotes}
             />
           )}
 

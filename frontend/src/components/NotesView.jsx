@@ -19,6 +19,7 @@ export const NotesView = ({
   onDeleteDocument,
   onLoadSample,
   onUpdateTopic,
+  onClearAllNotes,
 }) => {
   const [activeTab, setActiveTab] = useState('upload');
   const [isDragging, setIsDragging] = useState(false);
@@ -180,6 +181,17 @@ export const NotesView = ({
               <BookOpen className="h-3.5 w-3.5 text-cyan-600" />
               <span>Networks</span>
             </button>
+
+            {documents && documents.length > 0 && onClearAllNotes && (
+              <button
+                onClick={onClearAllNotes}
+                className="flex items-center gap-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 px-3 py-1.5 text-xs font-semibold text-rose-700 border border-rose-200 transition-colors ml-auto"
+                title="Wipe notes in this session to upload your own notes on any subject"
+              >
+                <Trash2 className="h-3.5 w-3.5 text-rose-600" />
+                <span>Start Fresh (Clear All)</span>
+              </button>
+            )}
           </div>
         </div>
       </div>

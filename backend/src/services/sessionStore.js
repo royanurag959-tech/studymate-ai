@@ -16,8 +16,8 @@ export class SessionStore {
 
     this.sessions.set(defaultSessionId, {
       id: defaultSessionId,
-      name: 'Biology: Photosynthesis & Respiration',
-      topic: 'Plant Physiology & Cellular Respiration',
+      name: 'My Study Notes',
+      topic: 'General Study Material',
       created_at: now,
       updated_at: now,
       document_count: 0,

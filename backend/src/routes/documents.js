@@ -21,7 +21,10 @@ documentsRouter.post('/documents', upload.single('file'), async (req, res) => {
 
     const { originalname, buffer } = req.file;
     const sessionId = req.body.session_id || 'default-session';
-    const topic = req.body.topic || 'Plant Physiology & Cellular Respiration';
+    const derivedTopic = originalname.replace(/\.[^/.]+$/, '').replace(/[_-]/g, ' ');
+    const topic = (req.body.topic && req.body.topic !== 'Plant Physiology & Cellular Respiration' && req.body.topic !== 'General Study Material' && req.body.topic !== 'General Topic')
+      ? req.body.topic
+      : derivedTopic;
 
     if (buffer.length === 0) {
       return res.status(400).json({ detail: 'The uploaded file is empty. Please provide notes with content.' });
@@ -81,6 +84,11 @@ documentsRouter.post('/documents', upload.single('file'), async (req, res) => {
 
     sessionStore.addDocument(metadata, chunks);
 
+    const currentSession = sessionStore.getSession(sessionId);
+    if (currentSession && (currentSession.topic === 'General Study Material' || currentSession.topic === 'Plant Physiology & Cellular Respiration' || currentSession.document_count <= 1)) {
+      sessionStore.updateSession(sessionId, derivedTopic, topic);
+    }
+
     const previewText = fullText.slice(0, 400) + (fullText.length > 400 ? '...' : '');
 
     return res.json({
@@ -101,8 +109,14 @@ documentsRouter.post('/notes', (req, res) => {
     return res.status(400).json({ detail: 'Pasted notes cannot be empty.' });
   }
 
+  const cleanTitle = (title || '').trim() || 'Pasted Notes';
+  const sessionId = session_id || 'default-session';
+  const activeTopic = (topic && topic !== 'Plant Physiology & Cellular Respiration' && topic !== 'General Study Material' && topic !== 'General Topic')
+    ? topic
+    : cleanTitle;
+
   const docId = `doc-${uuidv4().slice(0, 8)}`;
-  const filename = `${title || 'Pasted Notes'}.txt`;
+  const filename = `${cleanTitle}.txt`;
   const sanitized = documentProcessor.sanitizeUntrustedStudyText(cleanContent);
   const pages = [{ pageNumber: 1, text: sanitized }];
 
@@ -113,8 +127,8 @@ documentsRouter.post('/notes', (req, res) => {
     id: docId,
     filename,
     file_type: 'txt',
-    session_id: session_id || 'default-session',
-    topic: topic || 'General Notes',
+    session_id: sessionId,
+    topic: activeTopic,
     word_count: wordCount,
     char_count: sanitized.length,
     page_count: 1,
@@ -124,6 +138,11 @@ documentsRouter.post('/notes', (req, res) => {
   };
 
   sessionStore.addDocument(metadata, chunks);
+
+  const currentSession = sessionStore.getSession(sessionId);
+  if (currentSession && (currentSession.topic === 'General Study Material' || currentSession.topic === 'Plant Physiology & Cellular Respiration' || currentSession.document_count <= 1)) {
+    sessionStore.updateSession(sessionId, cleanTitle, activeTopic);
+  }
 
   const previewText = sanitized.slice(0, 400) + (sanitized.length > 400 ? '...' : '');
 

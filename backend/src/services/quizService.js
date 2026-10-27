@@ -26,7 +26,8 @@ export class QuizService {
     for (let i = 0; i < sentencesWithChunks.length && questions.length < numQuestions; i += step) {
       const { sentence, chunk } = sentencesWithChunks[i];
       const qType = allowedTypes[(qIdx - 1) % allowedTypes.length];
-      const conceptName = chunk.section_title || topic;
+      const derivedDocName = (chunk.source_filename || '').replace(/\.[^/.]+$/, '').replace(/[_-]/g, ' ');
+      const conceptName = chunk.section_title || (topic && topic !== 'General Study Material' && topic !== 'Plant Physiology & Cellular Respiration' ? topic : derivedDocName) || 'Study Material';
 
       if (qType === 'multiple_choice') {
         const words = sentence.split(/\s+/).filter((w) => w.length > 4);
