@@ -74,6 +74,14 @@ export class SessionStore {
 
     if (name) session.name = name;
     if (topic) session.topic = topic;
+
+    // Keep name and topic in sync if only one is updated
+    if (topic && (!name || session.name.startsWith('Biology:') || session.name === 'My Study Notes')) {
+      session.name = topic;
+    } else if (name && !topic) {
+      session.topic = name;
+    }
+
     session.updated_at = new Date().toISOString();
     return session;
   }

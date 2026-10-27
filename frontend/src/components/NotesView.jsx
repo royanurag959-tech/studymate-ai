@@ -35,6 +35,10 @@ export const NotesView = ({
   const [editingTopic, setEditingTopic] = useState(topic);
   const [isEditingTopic, setIsEditingTopic] = useState(false);
 
+  React.useEffect(() => {
+    setEditingTopic(topic);
+  }, [topic]);
+
   // Document preview modal
   const [previewDoc, setPreviewDoc] = useState(null);
 

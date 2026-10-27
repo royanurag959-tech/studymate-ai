@@ -143,10 +143,10 @@ export function App() {
 
   const handleUpdateTopic = async (newTopic) => {
     try {
-      await api.updateSession(currentSessionId, undefined, newTopic);
+      await api.updateSession(currentSessionId, newTopic, newTopic);
       await loadSessions();
       await loadSessionData(currentSessionId);
-      showToast(`Updated topic to "${newTopic}"`);
+      showToast(`Updated session to "${newTopic}"`);
     } catch (err) {
       alert(`Failed to update topic: ${err.message}`);
     }
@@ -214,7 +214,7 @@ export function App() {
   };
 
   const handleRenameSession = async (id, name) => {
-    await api.updateSession(id, name, undefined);
+    await api.updateSession(id, name, name);
     await loadSessions();
     showToast('Session renamed.');
   };
