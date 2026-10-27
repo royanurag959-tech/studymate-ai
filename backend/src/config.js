@@ -23,7 +23,7 @@ export const config = {
 
   // Storage & Guardrails
   MAX_UPLOAD_SIZE_MB: parseInt(process.env.MAX_UPLOAD_SIZE_MB || '15', 10),
-  CONFIDENCE_THRESHOLD: parseFloat(process.env.CONFIDENCE_THRESHOLD || '0.28'),
+  CONFIDENCE_THRESHOLD: parseFloat(process.env.CONFIDENCE_THRESHOLD || '0.20'),
   DATA_DIR: path.join(__dirname, '..', 'data'),
   SAMPLE_NOTES_DIR: path.join(__dirname, '..', 'sample_notes'),
 };

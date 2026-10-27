@@ -1,6 +1,7 @@
 import { config } from '../config.js';
 
 const STOPWORDS = new Set([
+  // English Stopwords
   'a', 'about', 'above', 'after', 'again', 'against', 'all', 'am', 'an', 'and', 'any', 'are',
   'as', 'at', 'be', 'because', 'been', 'before', 'being', 'below', 'between', 'both', 'but',
   'by', 'can', 'could', 'did', 'do', 'does', 'doing', 'down', 'during', 'each', 'few', 'for',
@@ -11,7 +12,15 @@ const STOPWORDS = new Set([
   'she', 'should', 'so', 'some', 'such', 'than', 'that', 'the', 'their', 'theirs', 'them',
   'themselves', 'then', 'there', 'these', 'they', 'this', 'those', 'through', 'to', 'too',
   'under', 'until', 'up', 'very', 'was', 'we', 'were', 'what', 'when', 'where', 'which',
-  'while', 'who', 'whom', 'why', 'with', 'would', 'you', 'your', 'yours', 'yourself', 'yourselves'
+  'while', 'who', 'whom', 'why', 'with', 'would', 'you', 'your', 'yours', 'yourself', 'yourselves',
+  // Common Conversational / Question Query Words
+  'explain', 'describe', 'tell', 'define', 'definition', 'meaning', 'concept', 'notes',
+  'summarize', 'summary', 'please', 'give', 'details', 'briefly', 'what', 'which', 'who',
+  // Hindi & Hinglish Stopwords & Query Fillers
+  'kya', 'hai', 'hain', 'ho', 'hota', 'hoti', 'hote', 'batao', 'bataiye', 'samjhao',
+  'karein', 'kare', 'kaise', 'kyun', 'kisko', 'kiska', 'kisne', 'bare', 'baare', 'mein',
+  'me', 'ka', 'ki', 'ke', 'ko', 'se', 'aur', 'yeh', 'ye', 'woh', 'wo', 'par', 'bhi',
+  'kuch', 'kitna', 'kitne', 'chahiye', 'karo', 'kijiye'
 ]);
 
 export class PassageRetriever {
@@ -21,6 +30,16 @@ export class PassageRetriever {
     return tokens.filter((t) => t.length > 1 && !STOPWORDS.has(t));
   }
 
+  isTokenMatch(qToken, chunkTokens) {
+    if (chunkTokens.has(qToken)) return true;
+    for (const ct of chunkTokens) {
+      if (qToken.length >= 4 && ct.length >= 4) {
+        if (ct.startsWith(qToken) || qToken.startsWith(ct)) return true;
+      }
+    }
+    return false;
+  }
+
   scoreChunk(queryTokens, chunkText) {
     if (!queryTokens || queryTokens.length === 0 || !chunkText) return 0.0;
 
@@ -28,11 +47,13 @@ export class PassageRetriever {
     if (chunkTokens.length === 0) return 0.0;
 
     const chunkSet = new Set(chunkTokens);
-    const matchedTokens = queryTokens.filter((t) => chunkSet.has(t));
+    const matchedTokens = queryTokens.filter((t) => this.isTokenMatch(t, chunkSet));
     if (matchedTokens.length === 0) return 0.0;
 
     const tokenCoverage = new Set(matchedTokens).size / new Set(queryTokens).size;
-    const tfSum = matchedTokens.reduce((acc, t) => acc + chunkTokens.filter((ct) => ct === t).length, 0);
+    const tfSum = matchedTokens.reduce((acc, t) => {
+      return acc + chunkTokens.filter((ct) => this.isTokenMatch(t, new Set([ct]))).length;
+    }, 0);
     const tfDensity = tfSum / (chunkTokens.length + 15);
 
     let phraseBonus = 0.0;
@@ -55,7 +76,7 @@ export class PassageRetriever {
       const sTokens = new Set(this.tokenize(s));
       let hits = 0;
       for (const t of querySet) {
-        if (sTokens.has(t)) hits++;
+        if (this.isTokenMatch(t, sTokens)) hits++;
       }
       if (hits > bestHits) {
         bestHits = hits;
@@ -83,7 +104,7 @@ export class PassageRetriever {
     const scoredChunks = [];
     for (const chunk of chunks) {
       const s = this.scoreChunk(queryTokens, chunk.content);
-      if (s > 0.12) {
+      if (s > 0.08) {
         scoredChunks.push({ score: s, chunk });
       }
     }
@@ -105,7 +126,9 @@ export class PassageRetriever {
       }
     }
 
-    const coveredQueryTokens = [...new Set(queryTokens)].filter((t) => allRetrievedTokens.has(t));
+    const coveredQueryTokens = [...new Set(queryTokens)].filter((t) => {
+      return this.isTokenMatch(t, allRetrievedTokens);
+    });
     const coveragePercent = parseFloat(
       ((coveredQueryTokens.length / new Set(queryTokens).size) * 100.0).toFixed(1)
     );
